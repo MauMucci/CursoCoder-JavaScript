@@ -1,4 +1,4 @@
-//PRIMER VERSION
+
 let cantidad = parseInt( prompt("Ingrese la cantidad de elementos a comprar"));
 let total = calcular_suma(cantidad);
 
