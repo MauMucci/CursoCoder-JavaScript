@@ -1,0 +1,39 @@
+header{
+    display: flex;
+    flex-direction: column;
+}
+
+
+.card-img-top{
+    width: 100%;
+    height:fit-content;
+}
+
+.contenedor{
+    display: flex;
+    flex-direction: row;
+}
+
+.div-icon-carrito{
+    display: flex;
+    justify-content: flex-end;
+    border: 5px;
+}
+
+#icon-carrito{
+float:left ;    
+}
+
+#div-carrito{
+    display: none;
+    height: 400px;
+    background-color: rgb(69, 69, 147);
+}
+
+
+tr{
+    color: red;
+}
+/* ul{
+    list-style: none;
+} */

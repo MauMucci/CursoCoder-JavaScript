@@ -5,78 +5,108 @@ class Producto{
         this.precio = precio;
     }
 
-    get_datos(){
-        console.log("Nombre del producto", this.nombre);
-        console.log("Precio del producto",this.precio);
-    }
+    cantidad = 1;
 }
 
-//DECLARACION DE FUNCIONES
 
-function alta_productos(c){
+    let arreglo_carrito = [];
 
-    let lista_productos = [];
+    let boton_comprar = document.querySelectorAll(".botonCompra"); //ojo, va con "." porque es un selector
+    let icono_carrito = document.getElementById("icon-carrito");
+    let div_carrito = document.getElementById("div-carrito");
+    let tabla_carrito = document.getElementById("tabla-carrito");
+    let boton_recuperar_carrito = document.getElementById("boton-recuperar-carrito");
 
-    for (let i=0; i<c; i++){
+    icono_carrito.addEventListener("click",evaluar_carrito); //evalua si la seccion del carrito esta desplegada.
 
-        let nombre = prompt ("ingrese el nombre del producto: "+(i+1));
-        let precio = parseFloat(prompt("ingrese el precio: "+(i+1)));
-        let stock = prompt ("ingrese el stock del producto: "+(i+1));
-        let producto = new Producto(nombre, precio, stock);
-
-        lista_productos.push(producto);
-    }
-
-    console.log(lista_productos);
-    return lista_productos;
-}
-
-function consultar_productos(arr){
-
-    for(let producto of arr){
-        producto.get_datos();
-    }
-}
-
-function calcular_suma(arr){
-    let suma = 0
-    for(let producto of arr){
-        suma = suma +producto.precio;
-    }
-    return suma
-}
-
-function aplicar_descuento(s,d){
-    s = s*(1-d/100);
-    return s;
-}
-
-//CODIGO    
-
-let entrada = prompt("Bienvenido ¿Desea agregar productos? -s/n-");
-let suma = 0;
-
-if(entrada == "s"){
-    let cantidad = prompt("¿Cuantos productos desea ingresar?");
-    let lista=[] = alta_productos(cantidad);
-
-    consultar_productos(lista);    
-    console.log("Monto total de la lista: $", suma = calcular_suma(lista));
-    let entrada2 = prompt("¿Desea aplicar algun descuento? -s/n-")
-    if(entrada2 = "s"){
-        let descuento = parseFloat(prompt("Ingrese el descuento en %"));
-        let salida = aplicar_descuento(suma,descuento);
-        console.log("El monto final, aplicando un descuento de: "+descuento+ " es: "+salida);
-    }
-    else{
-        console.log("Que tenga buen dia");
+    //recorre todos los elementos de la coleccion boton_comprar y les asigna el evento
+    for(let b of boton_comprar){
+        b.addEventListener("click" , agregar_al_carrito )
     }
     
-}
-else if(entrada == "n"){
-    console.log("Que tenga buen dia");}
-    else{
-    console.log("Ingreso incorrecto, vuelva a empezar");}
+    function agregar_al_carrito(e){
+    
+        let boton = e.target;
+        let card_body = boton.parentNode;
+       
+        //capturo el nombre y el precio que estan en h5 y h3 de cada card
+        let nombre_producto = card_body.querySelector("h5").textContent;
+        let precio_producto = parseFloat( card_body.querySelector("h3").textContent);
+        
+        //genero un objeto de la clase producto y lo agrego al arreglo
+        let producto = new Producto(nombre_producto,precio_producto);
+        arreglo_carrito.push(producto);
+        console.log("arreglo del carrito de compras", arreglo_carrito);
     
 
+        //calculo la suma de todos los productos
+        let suma = 0;
+        for(let a of arreglo_carrito){
+            suma = suma + a.precio;
+        }
+        console.log("suma",suma);
+        
 
+
+        //agrego la fila cuando se agrega cada producto
+        let fila = document.createElement("tr");
+        fila.innerHTML = `<td>${producto.nombre}</td>
+                        <td>${producto.cantidad}</td>
+                        <td>${producto.precio}</td>
+                        <td><button class="btn btn-info borrar-elemento">Borrar</td>`;
+
+
+        let tabla_body = document.getElementById("tabla-body");
+        tabla_body.append(fila);
+
+        //agrego la fila "Total"
+        let th_cantidad_total = document.getElementById("th-cant-total");
+        let cant_aux = arreglo_carrito.length;
+        th_cantidad_total.innerHTML = `${cant_aux}`;
+        
+        let th_precio_total = document.getElementById("th-precio-total");
+        th_precio_total.innerHTML = `${suma}`;
+
+
+        //Boton "borrar"
+        let boton_borrar = document.querySelectorAll(".borrar-elemento");
+        for(let b of boton_borrar){
+            b.addEventListener("click" , borrar_del_carrito)
+            }
+
+            function borrar_del_carrito(e){
+                let abuelo = e.target.parentNode.parentNode;
+                abuelo.remove();
+                console.log(e);
+            }//falta que reste el costo y la cantidad
+            
+            let arreglo_carrito_js = JSON.stringify(arreglo_carrito);
+            console.log("a",arreglo_carrito);
+            console.log(arreglo_carrito_js);
+            localStorage.setItem("carrito_storage",arreglo_carrito_js);
+
+    }
+
+    
+    let flag = 0;
+    //esta funcion revisa si la pantalla del carrito es visible o no
+    function evaluar_carrito(){
+        if(flag == 0){
+            mostrar_carrito();
+        }
+        else{
+            ocultar_carrito();
+        }
+    }
+            function mostrar_carrito(producto){
+                div_carrito.style.display = "block";
+                icono_carrito.style.color = "red";
+                flag = 1;
+            }
+            function ocultar_carrito(){
+                div_carrito.style.display = "none";
+                icono_carrito.style.color = "black";
+                flag = 0;
+            }   
+    
+   
